@@ -1,0 +1,13 @@
+body{
+    display: block!important;
+    background: #F5F5F5 !important;;
+}
+
+button {
+    background: #f7c500;
+    color: white;
+} 
+
+button:hover {
+    background: #f7c500 !important;;;
+}

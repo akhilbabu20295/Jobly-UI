@@ -1,0 +1,85 @@
+.navbar {
+    position: fixed;            /* Stick to top */
+    top: 0;                     /* Align to top */
+    left: 0;                    /* Align to left */
+    width: 100%;                /* Full width */
+    z-index: 1000;              /* Stay above other content */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    background-color: white;
+    border-bottom: 1px solid #eee;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 10px;
+  }
+  
+  .logo {
+    font-weight: bold;
+    font-size: 24px;
+    color: #f6c900;
+  }
+  
+  .navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .nav-links li {
+    color:  rgb(66, 65, 65) ;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+  }
+  
+  .nav-links li.active {
+    color: rgb(66, 65, 65);
+    font-weight: bold;
+  }
+  
+  .nav-links li.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 100%;
+    height: 2px;
+    background-color: #f6c900;
+  }
+  
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .login {
+    color: #6e6e80;
+    cursor: pointer;
+  }
+  
+  .post-btn {
+    background-color: #f6c900;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+  }
+  
+  a:-webkit-any-link{
+    color: #000;
+  }
+  a:-webkit-any-link {
+    text-decoration: none;
+  }
