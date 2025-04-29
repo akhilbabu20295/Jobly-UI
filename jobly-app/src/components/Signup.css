@@ -63,7 +63,7 @@ h2 {
 button {
   width: 100%;
   padding: 12px;
-  background: #8E2DE2;
+  background: #ffc107;
   color: white;
   border: none;
   border-radius: 8px;
@@ -83,7 +83,7 @@ button:hover {
 }
 
 .login-text a {
-  color: #8E2DE2;
+  color: #f6c900;
   text-decoration: none;
   font-weight: 600;
 }

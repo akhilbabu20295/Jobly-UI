@@ -8,6 +8,11 @@ import Login from './components/Login'
 import SignUp from './components/Signup'
 import Landing from './components/Landing'
 import Footer from './components/Footer';
+import UserProfile from './user/UserProfile';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import JobDetail from './components/JobDetail';
+import JobList from './components/JobList';
+import ForgotPassword from './components/ForgotPassword';
 
 
 function App() {
@@ -25,6 +30,10 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<SignUp />} />
+          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/jobs" element={<JobList />} />
+          <Route path="/jobs/:id" element={<JobDetail />} />
+          <Route path="/reset-password" element={<ForgotPassword />} />
         </Routes>
     </div>  
     <Footer/>
