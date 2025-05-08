@@ -7,7 +7,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -15,8 +15,34 @@ function Login() {
       return;
     }
 
-    console.log("Email:", email, "Password:", password);
-    alert("Login successful!");
+    try {
+      const response = await fetch("http://localhost:8081/api/v1/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setError("");
+        alert("Login successful!");
+
+        // Save token in localStorage (or sessionStorage)
+        localStorage.setItem("token", data.token);
+        console.log(data.token);
+        window.location.href = "/profile";
+        
+      } else {
+        setError(data.message || "Login failed.");
+      }
+    } catch (err) {
+      setError("Error connecting to server.");
+    }
+
+
   };
 
   return (
@@ -46,10 +72,10 @@ function Login() {
           <button type="submit">Login</button>
         </form>
         <p className="signup-text">
-        Don't have an account? <Link to="/register">Sign Up</Link> 
+          Don't have an account? <Link to="/register">Sign Up</Link>
         </p>
         <p className="signup-text">
-        Forgot Password? <Link to="/reset-password">Reset Password</Link> 
+          Forgot Password? <Link to="/reset-password">Reset Password</Link>
         </p>
       </div>
     </div>

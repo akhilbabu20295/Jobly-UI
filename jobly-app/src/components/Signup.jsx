@@ -20,7 +20,7 @@ function Signup() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword) {
+        if (!formData.firstName ||  !formData.lastName || !formData.email || !formData.password || !formData.confirmPassword) {
             setError("All fields are required!");
             return;
         }
@@ -56,7 +56,8 @@ function Signup() {
                 alert("Sign-up successful!");
                 console.log("User Registered:", result);
                 setFormData({
-                    fullName: "",
+                    firstName: "",
+                    lastName: "",
                     email: "",
                     password: "",
                     confirmPassword: "",
@@ -80,12 +81,22 @@ function Signup() {
                 {error && <p className="error">{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="input-group">
-                        <label>Full Name:</label>
+                        <label>First Name:</label>
                         <input
                             type="text"
-                            name="fullName"
-                            placeholder="Enter full name"
-                            value={formData.fullName}
+                            name="firstName"
+                            placeholder="Enter First name"
+                            value={formData.firstName}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="input-group">
+                        <label>Last Name:</label>
+                        <input
+                            type="text"
+                            name="lastName"
+                            placeholder="Enter Last name"
+                            value={formData.lastName}
                             onChange={handleChange}
                         />
                     </div>

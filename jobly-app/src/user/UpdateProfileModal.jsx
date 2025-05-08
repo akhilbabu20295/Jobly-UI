@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
-import './UserProfile.css';
+import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 
-const UpdateProfileModal = ({ show, handleClose, userData }) => {
+const UpdateProfileModal = ({ show, handleClose, profileData }) => {
   const [formData, setFormData] = useState({
-    fullName: userData?.name || '',
-    email: userData?.email || '',
-    phoneNumber: userData?.phone || '',
-    address: userData?.address || '',
-    location: userData?.location || '',
-    mobile: userData?.mobile || '',
-    dateOfBirth: userData?.dateOfBirth || ''
+    bio: profileData?.bio || '',
+    firstName: profileData?.firstName || '',
+    lastName: profileData?.lastName || '',
+    address: profileData?.address || '',
+    location: profileData?.location || '',
+    mobile: profileData?.mobile || '',
+    email: profileData?.email || '',
+    dob: profileData?.dob || '',
+    designation: profileData?.designation || ''
   });
 
   const handleChange = (e) => {
@@ -23,103 +24,152 @@ const UpdateProfileModal = ({ show, handleClose, userData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically make an API call to update the user profile
     console.log('Updated Profile Data:', formData);
     handleClose();
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal show={show} onHide={handleClose} size="lg" centered>
       <Modal.Header closeButton>
         <Modal.Title>Update Profile</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Full Name</Form.Label>
+
+          {/* Bio */}
+          <h5>Profile Bio</h5>
+          <hr />
+          <Form.Group className="mb-4">
+            <Form.Label>Bio</Form.Label>
             <Form.Control
-              type="text"
-              name="fullName"
-              value={formData.fullName}
+              as="textarea"
+              rows={3}
+              name="bio"
+              value={formData.bio}
               onChange={handleChange}
+              placeholder="Write your bio here..."
               required
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Email</Form.Label>
-            <Form.Control
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
+          {/* Personal Info */}
+          <h5>Personal Information</h5>
+          <hr />
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Label>First Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                placeholder="First Name"
+                required
+              />
+            </Col>
+            <Col md={6}>
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder="Last Name"
+                required
+              />
+            </Col>
+          </Row>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Phone Number</Form.Label>
-            <Form.Control
-              type="tel"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-4">
             <Form.Label>Address</Form.Label>
             <Form.Control
               as="textarea"
-              rows={3} // you can increase the number of rows as needed
+              rows={2}
               name="address"
               value={formData.address}
               onChange={handleChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Location</Form.Label>
-            <Form.Control
-              type="text"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
+              placeholder="Your address here..."
               required
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Mobile</Form.Label>
-            <Form.Control
-              type="tel"
-              name="mobile"
-              value={formData.mobile}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
+          {/* Contact Info */}
+          <h5>Contact & Work Info</h5>
+          <hr />
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Label>Location</Form.Label>
+              <Form.Control
+                type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                placeholder="City, Country"
+                required
+              />
+            </Col>
+            <Col md={6}>
+              <Form.Label>Mobile</Form.Label>
+              <Form.Control
+                type="text"
+                name="mobile"
+                value={formData.mobile}
+                onChange={handleChange}
+                placeholder="Mobile Number"
+                required
+              />
+            </Col>
+          </Row>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Date of Birth</Form.Label>
-            <Form.Control
-              type="date"
-              name="dateOfBirth"
-              value={formData.dateOfBirth}
-              onChange={handleChange}
-              required
-            />
-          </Form.Group>
+          {/* New Email Row */}
+          <Row className="mb-4">
+            <Col md={12}>
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email address"
+                required
+              />
+            </Col>
+          </Row>
 
-          <div className="d-flex justify-content-end gap-2">
+          <Row className="mb-4">
+            <Col md={6}>
+              <Form.Label>Date Of Birth</Form.Label>
+              <Form.Control
+                type="date"
+                name="dob"
+                value={formData.dob}
+                onChange={handleChange}
+                required
+              />
+            </Col>
+            <Col md={6}>
+              <Form.Label>Designation</Form.Label>
+              <Form.Control
+                type="text"
+                name="designation"
+                value={formData.designation}
+                onChange={handleChange}
+                placeholder="Your role/designation"
+                required
+              />
+            </Col>
+          </Row>
+
+          {/* Buttons */}
+          <div className="d-flex justify-content-end gap-2 mt-3">
             <Button variant="secondary" onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="warning" type="submit">
-              Save Changes
+            <Button variant="primary" type="submit">
+              Save Profile
             </Button>
           </div>
+
         </Form>
       </Modal.Body>
     </Modal>

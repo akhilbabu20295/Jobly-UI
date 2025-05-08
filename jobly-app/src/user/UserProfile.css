@@ -1,21 +1,44 @@
-body{
-    background: #f7f7ff;
-    margin-top:20px;
-    font-family:'Segoe UI', sans-serif;
-}
-.card {
+.header-bg {
+    background: linear-gradient(135deg, #f7b500, #f7d000);
+    height: 180px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     position: relative;
+  }
+  .profile-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #fff8dc;
     display: flex;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 0 solid transparent;
-    border-radius: .25rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 6px 0 rgb(218 218 253 / 65%), 0 2px 6px 0 rgb(206 206 238 / 54%);
-}
-.me-2 {
-    margin-right: .5rem!important;
-}
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #b08900;
+    border: 4px solid white;
+    position: absolute;
+    bottom: -50px;
+    left: 30px;
+  }
+  .btn-yellow {
+    background-color: #f7b500;
+    color: white;
+  }
+  .btn-yellow:hover {
+    background-color: #d99f00;
+    color: white;
+  }
+  .card-light {
+    background-color: #fffbea;
+    border: none;
+  }
+  .badge-skill {
+    background-color: #fff7db;
+    color: #b08900;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin: 3px;
+    display: inline-block;
+  }
