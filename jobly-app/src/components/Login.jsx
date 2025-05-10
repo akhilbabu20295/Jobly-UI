@@ -32,7 +32,8 @@ function Login() {
 
         // Save token in localStorage (or sessionStorage)
         localStorage.setItem("token", data.token);
-        console.log(data.token);
+        localStorage.setItem("userId", data.userId);
+        console.log(data.userId);
         window.location.href = "/profile";
         
       } else {
