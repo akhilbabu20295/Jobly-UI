@@ -34,27 +34,27 @@ function Signup() {
         setLoading(true);
 
         try {
-            const response = await fetch("http://localhost:8081/register/user", {
+            const response = await fetch("http://localhost:8081/api/v1/user/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    fullName: formData.fullName,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
                     email: formData.email,
                     password: formData.password,
+                    userType:"USER"
                 }),
             });
 
 
             console.log("Full Response:", response);
-            const result = await response.json();
+           
 
-
-
-            if (result.ok) {
+            if (response.status == 201) {
                 alert("Sign-up successful!");
-                console.log("User Registered:", result);
+             
                 setFormData({
                     firstName: "",
                     lastName: "",
