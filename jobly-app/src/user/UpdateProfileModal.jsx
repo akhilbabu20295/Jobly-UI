@@ -95,8 +95,10 @@ const UpdateProfileModal = ({ show, handleClose, profileData }) => {
               value={formData.bio}
               onChange={handleChange}
               placeholder="Write your bio here..."
+              maxLength={255}
               required
             />
+            <small>{formData.bio.length}/255 characters</small>
           </Form.Group>
 
           {/* Personal Info */}

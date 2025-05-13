@@ -84,6 +84,10 @@ const UserProfile = () => {
                 <span className="badge bg-warning bg-opacity-25 text-warning mb-3 me-2">MYSQL</span>
                 <span className="badge bg-warning bg-opacity-25 text-warning mb-3 me-2">Hibernate</span>
               </div>
+              <button className="btn btn-sm btn-outline-warning">
+              <i className="bi bi-pencil-square"></i> Edit
+             </button>
+
             </div>
           </div>
 

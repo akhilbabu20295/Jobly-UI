@@ -13,6 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import JobDetail from './components/JobDetail';
 import JobList from './components/JobList';
 import ForgotPassword from './components/ForgotPassword';
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 
 function App() {
