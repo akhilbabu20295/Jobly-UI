@@ -14,6 +14,8 @@ import JobDetail from './components/JobDetail';
 import JobList from './components/JobList';
 import ForgotPassword from './components/ForgotPassword';
 import "bootstrap-icons/font/bootstrap-icons.css";
+import PostJobs from './recruiter/PostJobs';
+import ListJobs from './recruiter/ListJobs';
 
 
 function App() {
@@ -25,7 +27,7 @@ function App() {
 
   return (
     <>   
-    {!shouldHideNavbar && <Navbar />}
+    {/* {!shouldHideNavbar && <Navbar />} */}
     <div className="container mt-5">
       <Routes>
           <Route path="/" element={<Landing />} />
@@ -35,9 +37,11 @@ function App() {
           <Route path="/jobs" element={<JobList />} />
           <Route path="/jobs/:id" element={<JobDetail />} />
           <Route path="/reset-password" element={<ForgotPassword />} />
+          <Route path="/post-jobs" element={<PostJobs />} />
+           <Route path="/list-jobs" element={<ListJobs />} />
         </Routes>
     </div>  
-    <Footer/>
+   {/* // <Footer/> */}
     </>
   )
 }
