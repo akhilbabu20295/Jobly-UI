@@ -16,6 +16,8 @@ import ForgotPassword from './components/ForgotPassword';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import PostJobs from './recruiter/PostJobs';
 import ListJobs from './recruiter/ListJobs';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import EmployerRegister from './components/EmployerRegister';
 
 
 function App() {
@@ -27,7 +29,7 @@ function App() {
 
   return (
     <>   
-    {/* {!shouldHideNavbar && <Navbar />} */}
+     {!shouldHideNavbar && <Navbar />} 
     <div className="container mt-5">
       <Routes>
           <Route path="/" element={<Landing />} />
@@ -38,10 +40,11 @@ function App() {
           <Route path="/jobs/:id" element={<JobDetail />} />
           <Route path="/reset-password" element={<ForgotPassword />} />
           <Route path="/post-jobs" element={<PostJobs />} />
-           <Route path="/list-jobs" element={<ListJobs />} />
+          <Route path="/list-jobs" element={<ListJobs />} />
+          <Route path="/recruiter-register" element={<EmployerRegister />} />
         </Routes>
     </div>  
-   {/* // <Footer/> */}
+  <Footer/> 
     </>
   )
 }

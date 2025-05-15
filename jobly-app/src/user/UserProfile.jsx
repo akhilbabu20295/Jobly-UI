@@ -24,7 +24,7 @@ const UserProfile = () => {
 
   const handleSaveSkills = (updatedSkills) => {
     setSkills(updatedSkills);
-    // Optionally, send to backend
+    // Optionally, send to backendcd
     // axios.put("/api/skills", updatedSkills);
   };
 
