@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./EmployerRegister.css";
 
 function EmployerRegister() {
@@ -10,9 +10,7 @@ function EmployerRegister() {
     profilePictureUrl: "",
     location: "",
     jobTitle: "",
-    companyName: "",
-    companyWebsite: "",
-    industry: "",
+    companyId: "",
     yearsOfExperience: "",
     activeJobPostCount: "",
     linkedInUrl: "",
@@ -21,6 +19,18 @@ function EmployerRegister() {
   });
 
   const [companyLogo, setCompanyLogo] = useState(null);
+  const [companies, setCompanies] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8081/api/v1/companies")
+      .then((res) => res.json())
+      .then((data) => {
+        setCompanies(data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch companies:", err);
+      });
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -36,35 +46,65 @@ function EmployerRegister() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const payload = new FormData();
-    Object.keys(formData).forEach((key) => {
-      payload.append(key, formData[key]);
-    });
-    if (companyLogo) {
-      payload.append("companyLogo", companyLogo);
-    }
-    console.log("Submitted:", Object.fromEntries(payload));
-    alert("Form submitted (check console for data)");
+
+    // Construct the payload object
+    const payload = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      profilePictureUrl: formData.profilePictureUrl,
+      location: formData.location,
+      yearsOfExperience: Number(formData.yearsOfExperience),
+      activeJobPostCount: Number(formData.activeJobPostCount || 0),
+      linkedInUrl: formData.linkedInUrl,
+      twitterUrl: formData.twitterUrl,
+      isVerified: formData.isVerified,
+      companyId: formData.companyId,
+      password: formData.password // You can get this from user input if needed
+    };
+
+    fetch("http://localhost:8081/api/v1/recruiters/registration", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to register recruiter");
+        }
+        return res.text();
+      })
+      .then((data) => {
+        console.log("Success:", data);
+        alert("Recruiter registered successfully!");
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        alert("Error during registration");
+      });
   };
 
   return (
     <div className="register-container">
       <div className="register-card">
         <h2 className="register-title">👨‍💼 Employer Registration</h2>
-        <hr></hr>
+        <hr />
         <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="form-grid">
             {[
               { name: "firstName", label: "First Name" },
               { name: "lastName", label: "Last Name" },
               { name: "email", label: "Email", type: "email" },
+              { name: "password", label: "Password", type: "password" },
               { name: "phone", label: "Phone" },
               { name: "profilePictureUrl", label: "Profile Picture URL" },
               { name: "location", label: "Location" },
               { name: "jobTitle", label: "Job Title" },
               { name: "yearsOfExperience", label: "Years of Experience", type: "number" },
               { name: "linkedInUrl", label: "LinkedIn URL" },
-              { name: "twitterUrl", label: "Twitter URL" },
             ].map(({ name, label, type = "text" }) => (
               <div key={name} className="form-group">
                 <label>{label}</label>
@@ -79,22 +119,23 @@ function EmployerRegister() {
               </div>
             ))}
           </div>
+
           {/* Company Name Dropdown */}
           <div className="form-group">
-            <label>Company Name</label>
+            <label>Company</label>
             <select
-              name="companyName"
+              name="companyId" // ✅ must match the state key
               className="form-control"
-              value={formData.companyName}
+              value={formData.companyId}
               onChange={handleInputChange}
+              required
             >
               <option value="">Select a company</option>
-              <option value="Google">Google</option>
-              <option value="Amazon">Amazon</option>
-              <option value="Microsoft">Microsoft</option>
-              <option value="TCS">TCS</option>
-              <option value="Infosys">Infosys</option>
-              <option value="Accenture">Accenture</option>
+              {companies.map((company) => (
+                <option key={company.id} value={company.id}>
+                  {company.name}
+                </option>
+              ))}
             </select>
           </div>
 
