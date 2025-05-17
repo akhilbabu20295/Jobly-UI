@@ -23,7 +23,7 @@ import EmployerRegister from './components/EmployerRegister';
 function App() {
   const [count, setCount] = useState(0)
   const location = useLocation();
-  const hideNavbarRoutes = ['/login', '/register'];
+  const hideNavbarRoutes = ['/login', '/register','/recruiter-register'];
 
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 

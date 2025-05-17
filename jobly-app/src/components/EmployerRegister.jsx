@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./EmployerRegister.css";
 
 function EmployerRegister() {
   const [formData, setFormData] = useState({
@@ -35,7 +36,6 @@ function EmployerRegister() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const payload = new FormData();
     Object.keys(formData).forEach((key) => {
       payload.append(key, formData[key]);
@@ -43,78 +43,65 @@ function EmployerRegister() {
     if (companyLogo) {
       payload.append("companyLogo", companyLogo);
     }
-
     console.log("Submitted:", Object.fromEntries(payload));
     alert("Form submitted (check console for data)");
   };
 
   return (
-    <div className="container mt-5">
-      <div className="card shadow-lg" style={{ marginTop: "100px" }}>
-        <div className="card-header bg-primary text-white">
-          <h2 className="mb-0">Employer Registration</h2>
-        </div>
-        <div className="card-body">
-          <form onSubmit={handleSubmit} encType="multipart/form-data">
-            <div className="row">
-              {[
-                { name: "firstName", label: "First Name" },
-                { name: "lastName", label: "Last Name" },
-                { name: "email", label: "Email", type: "email" },
-                { name: "phone", label: "Phone" },
-                { name: "profilePictureUrl", label: "Profile Picture URL" },
-                { name: "location", label: "Location" },
-                { name: "jobTitle", label: "Job Title" },
-                { name: "companyName", label: "Company Name" },
-                { name: "companyWebsite", label: "Company Website" },
-                { name: "industry", label: "Industry" },
-                { name: "yearsOfExperience", label: "Years of Experience", type: "number" },
-                { name: "activeJobPostCount", label: "Active Job Post Count", type: "number" },
-                { name: "linkedInUrl", label: "LinkedIn URL" },
-                { name: "twitterUrl", label: "Twitter URL" },
-              ].map(({ name, label, type = "text" }) => (
-                <div key={name} className="col-md-6 mb-3">
-                  <label>{label}</label>
-                  <input
-                    type={type}
-                    className="form-control"
-                    name={name}
-                    value={formData[name]}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              ))}
-
-              <div className="col-md-6 mb-3">
-                <label>Company Logo</label>
+    <div className="register-container">
+      <div className="register-card">
+        <h2 className="register-title">👨‍💼 Employer Registration</h2>
+        <hr></hr>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
+          <div className="form-grid">
+            {[
+              { name: "firstName", label: "First Name" },
+              { name: "lastName", label: "Last Name" },
+              { name: "email", label: "Email", type: "email" },
+              { name: "phone", label: "Phone" },
+              { name: "profilePictureUrl", label: "Profile Picture URL" },
+              { name: "location", label: "Location" },
+              { name: "jobTitle", label: "Job Title" },
+              { name: "yearsOfExperience", label: "Years of Experience", type: "number" },
+              { name: "linkedInUrl", label: "LinkedIn URL" },
+              { name: "twitterUrl", label: "Twitter URL" },
+            ].map(({ name, label, type = "text" }) => (
+              <div key={name} className="form-group">
+                <label>{label}</label>
                 <input
-                  type="file"
+                  type={type}
                   className="form-control"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
-              </div>
-
-              <div className="col-md-6 mb-3 form-check mt-4">
-                <input
-                  type="checkbox"
-                  className="form-check-input"
-                  name="isVerified"
-                  checked={formData.isVerified}
+                  name={name}
+                  value={formData[name]}
                   onChange={handleInputChange}
-                  id="isVerified"
+                  placeholder={`Enter ${label}`}
                 />
-                <label className="form-check-label" htmlFor="isVerified">
-                  Verified Account
-                </label>
               </div>
-            </div>
+            ))}
+          </div>
+          {/* Company Name Dropdown */}
+          <div className="form-group">
+            <label>Company Name</label>
+            <select
+              name="companyName"
+              className="form-control"
+              value={formData.companyName}
+              onChange={handleInputChange}
+            >
+              <option value="">Select a company</option>
+              <option value="Google">Google</option>
+              <option value="Amazon">Amazon</option>
+              <option value="Microsoft">Microsoft</option>
+              <option value="TCS">TCS</option>
+              <option value="Infosys">Infosys</option>
+              <option value="Accenture">Accenture</option>
+            </select>
+          </div>
 
-            <button type="submit" className="btn btn-primary text-white">
-              Register as Employer
-            </button>
-          </form>
-        </div>
+          <button type="submit" className="submit-btn">
+            Register Now
+          </button>
+        </form>
       </div>
     </div>
   );
