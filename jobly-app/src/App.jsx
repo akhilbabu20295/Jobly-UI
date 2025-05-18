@@ -18,6 +18,9 @@ import PostJobs from './recruiter/PostJobs';
 import ListJobs from './recruiter/ListJobs';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import EmployerRegister from './components/EmployerRegister';
+import AddCompany from './company/AddCompany';
+import CompanyList from './company/CompanyList';
+
 
 
 function App() {
@@ -42,9 +45,11 @@ function App() {
           <Route path="/post-jobs" element={<PostJobs />} />
           <Route path="/list-jobs" element={<ListJobs />} />
           <Route path="/recruiter-register" element={<EmployerRegister />} />
+          <Route path="/company-list" element={<CompanyList />} />
+          <Route path="/add-company" element={<AddCompany />} />
         </Routes>
     </div>  
-  <Footer/> 
+  {/* <Footer/>  */}
     </>
   )
 }
