@@ -20,13 +20,14 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import EmployerRegister from './components/EmployerRegister';
 import AddCompany from './company/AddCompany';
 import CompanyList from './company/CompanyList';
+import Dashboard from './admin/Dashboard';
 
 
 
 function App() {
   const [count, setCount] = useState(0)
   const location = useLocation();
-  const hideNavbarRoutes = ['/login', '/register','/recruiter-register'];
+  const hideNavbarRoutes = ['/login', '/register','/recruiter-register','/admin-dashboard'];
 
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
@@ -47,6 +48,7 @@ function App() {
           <Route path="/recruiter-register" element={<EmployerRegister />} />
           <Route path="/company-list" element={<CompanyList />} />
           <Route path="/add-company" element={<AddCompany />} />
+          <Route path="/admin-dashboard" element={<Dashboard />} />
         </Routes>
     </div>  
   {/* <Footer/>  */}
