@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Dashboard.css';
-
+import CompanyDashboard from '../company/CompanyDashboard';
+import SkillsDashboard from '../skills/SkillsDashboard';
 
 const Dashboard = () => {
+    const [activeSection, setActiveSection] = useState('dashboard');
+
     return (
         <div>
             {/* Header */}
             <header id="header" className="header fixed-top d-flex align-items-center">
                 <div className="d-flex align-items-center justify-content-between">
                     <a href="#" className="logo d-flex align-items-center">
-                        <img src="https://dummyimage.com/200x40/9c98a5/e3e3e3.png" alt="logo" width="200" height="40" />
+                        <img src="logo.png" alt="logo" width="200" height="40" />
                     </a>
                     <i className="bi bi-list toggle-sidebar-btn"></i>
                 </div>
@@ -57,19 +60,20 @@ const Dashboard = () => {
             <aside id="sidebar" className="sidebar">
                 <ul className="sidebar-nav" id="sidebar-nav">
                     <li className="nav-item">
-                        <a href="#" className="nav-link active">
+                        <a href="#" className="nav-link" onClick={() => setActiveSection('dashboard')}>
                             <i className="bi bi-house-door-fill"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
+
                     <li className="nav-item">
                         <a
                             href="#masterTablesSubmenu"
+                            className="nav-link d-flex justify-content-between align-items-center"
                             data-bs-toggle="collapse"
                             role="button"
                             aria-expanded="false"
                             aria-controls="masterTablesSubmenu"
-                            className="nav-link d-flex justify-content-between align-items-center"
                         >
                             <span>
                                 <i className="bi bi-table"></i>
@@ -80,16 +84,14 @@ const Dashboard = () => {
 
                         <ul className="collapse list-unstyled ps-4" id="masterTablesSubmenu">
                             <li className="nav-item">
-                                <a href="#" className="nav-link">Users</a>
+                                <a href="#" onClick={() => setActiveSection("companyDashboard")} className="nav-link">Company</a>
                             </li>
                             <li className="nav-item">
-                                <a href="#" className="nav-link">Roles</a>
-                            </li>
-                            <li className="nav-item">
-                                <a href="#" className="nav-link">Permissions</a>
+                                <a href="#" onClick={() => setActiveSection("skillsDashboard")} className="nav-link">Skills</a>
                             </li>
                         </ul>
                     </li>
+
                     <li className="nav-item">
                         <a href="#" className="nav-link">
                             <i className="bi bi-person-badge"></i>
@@ -114,14 +116,31 @@ const Dashboard = () => {
 
             {/* Main */}
             <main id="main">
-                <div className="container-fluid table-index">
-                    <div className="row g-3 justify-content-between mb-3">
-                        <div className="col-md-4">
-                            <h5>Dashboard</h5>
-                        </div>
-                    </div>
+                <div className="container-fluid">
+                    {activeSection === 'dashboard' && (
+                        <>
+                            <div className="row g-3 justify-content-between mb-3">
+                                <div className="col-md-4">
+                                    <h5>Dashboard</h5>
+                                </div>
+                            </div>
+                            <section className="dash-overview mb-4">
+                                {/* Dashboard widgets/cards go here */}
+                            </section>
+                        </>
+                    )}
 
+                    {activeSection === 'companyDashboard' && (
+                        <section className="company-dashboard">
+                            <CompanyDashboard />
+                        </section>
+                    )}
 
+                    {activeSection === 'skillsDashboard' && (
+                        <section className="skills-dashboard">
+                            <SkillsDashboard />
+                        </section>
+                    )}
                 </div>
             </main>
 
