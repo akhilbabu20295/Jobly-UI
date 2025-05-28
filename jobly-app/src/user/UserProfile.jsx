@@ -10,44 +10,57 @@ const UserProfile = () => {
   const [profile, setProfile] = useState(null);
   const [skills, setSkills] = useState([]);
   const [availableSkills, setAvailableSkills] = useState([]);
+  const [resumeUrl, setResumeUrl] = useState(null);
+  const [resumeFile, setResumeFile] = useState(null);
 
   const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token"); // Ensure token is saved after login
 
   useEffect(() => {
     if (!userId) return;
 
     // Fetch profile info
     axios.get(`http://localhost:8081/api/v1/user/profile/${userId}`)
-      .then((response) => {
-        setProfile(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching profile data:", error);
-      });
+      .then((response) => setProfile(response.data))
+      .catch((error) => console.error("Error fetching profile data:", error));
 
-    // Fetch skills linked to user profile from separate endpoint
+    // Fetch user skills
     axios.get(`http://localhost:8081/api/v1/user/${userId}`)
       .then((response) => {
-        // Assuming response.data is an array of skills [{id, name, ...}, ...]
         const userSkills = response.data || [];
         setSkills(userSkills.map(skill => skill.name));
       })
-      .catch((error) => {
-        console.error("Error fetching user skills:", error);
-      });
+      .catch((error) => console.error("Error fetching user skills:", error));
 
     // Fetch all available skills
     axios.get("http://localhost:8081/api/v1/admin/skills")
       .then((res) => setAvailableSkills(res.data))
       .catch((err) => console.error("Error fetching skills:", err));
-  }, [userId]);
+
+    // Fetch resume URL
+    axios.get(`http://localhost:8081/api/v1/user/profile/${userId}/resume`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(res => setResumeUrl(res.data.resumeUrl))
+      .catch(err => {
+        if (err.response?.status === 403) {
+          console.warn("User not authorized to access resume.");
+        } else if (err.response?.status === 404) {
+          console.info("No resume uploaded yet.");
+        } else {
+          console.error("Unexpected resume fetch error:", err);
+        }
+        setResumeUrl(null);
+      });
+
+  }, [userId, token]);
 
   const handleSaveSkills = (updatedSkills) => {
     if (!profile?.id) return;
 
-    // For simplicity, assume adding only new skills (not deleting)
     const newSkills = updatedSkills.filter(skillName => !skills.includes(skillName));
-
     newSkills.forEach(skillName => {
       const skill = availableSkills.find(s => s.name === skillName);
       if (skill) {
@@ -60,8 +73,30 @@ const UserProfile = () => {
       }
     });
 
-    // Update local skills state immediately
     setSkills(updatedSkills);
+  };
+
+  const handleResumeUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file || !profile?.id) return;
+
+    const formData = new FormData();
+    formData.append("resume", file);
+
+    axios.post(`http://localhost:8081/api/v1/user/profile/${profile.id}/resume`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        setResumeUrl(res.data.resumeUrl);
+        alert("Resume uploaded successfully!");
+      })
+      .catch(err => {
+        console.error("Resume upload failed:", err);
+        alert("Resume upload failed.");
+      });
   };
 
   return (
@@ -89,9 +124,7 @@ const UserProfile = () => {
                 {profile ? `${profile.firstName} ${profile.lastName}` : "Full Name"}
               </h3>
               <p className="text-warning fw-semibold mb-1">{profile?.designation || "Job Title"}</p>
-              <p className="text-muted">
-                <i className="bi bi-geo-alt-fill"></i> {profile?.location || "Location"}
-              </p>
+              <p className="text-muted"><i className="bi bi-geo-alt-fill"></i> {profile?.location || "Location"}</p>
             </div>
             <div>
               <button onClick={() => setShowModal(true)} className="btn btn-yellow me-2">
@@ -142,6 +175,28 @@ const UserProfile = () => {
               </button>
             </div>
           </div>
+
+          <div className="card card-light p-3 mt-3">
+            <h6 className="fw-bold mb-2">Resume</h6>
+            {resumeUrl ? (
+              <div className="mt-2">
+                <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-secondary me-2">
+                  <i className="bi bi-file-earmark-arrow-down"></i> View / Download Resume
+                </a>
+              </div>
+            ) : (
+              <div className="mt-2 text-muted fst-italic">No resume uploaded or accessible.</div>
+            )}
+            <div className="mt-3">
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={handleResumeUpload}
+                className="form-control"
+              />
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

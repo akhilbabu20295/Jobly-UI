@@ -23,6 +23,7 @@ import CompanyDashboard from './company/CompanyDashboard';
 import Usermanagement from './admin/Usermanagement';
 import CompanyList from './user/CompanyList';
 import UserJobList from './user/UserJobList';
+import UserJobDetail from './user/UserJobDetail';
 
 
 
@@ -43,7 +44,7 @@ function App() {
           <Route path="/register" element={<SignUp />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/jobs" element={<JobList />} />
-          <Route path="/jobs/:id" element={<JobDetail />} />
+          <Route path="/jobs/:id" element={<UserJobDetail />} />
           <Route path="/reset-password" element={<ForgotPassword />} />
           <Route path="/post-jobs" element={<PostJobs />} />
           <Route path="/list-jobs" element={<ListJobs />} />
