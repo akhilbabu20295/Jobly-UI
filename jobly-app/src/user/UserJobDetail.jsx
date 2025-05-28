@@ -10,6 +10,10 @@ const UserJobDetail = () => {
 
   const [applied, setApplied] = useState(false);
   const [applying, setApplying] = useState(false);
+
+  const [bookmarked, setBookmarked] = useState(false);
+  const [bookmarking, setBookmarking] = useState(false);
+
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -41,6 +45,19 @@ const UserJobDetail = () => {
       });
   }, [id, candidateId]);
 
+  // Check if bookmarked
+  useEffect(() => {
+    axios.get(`http://localhost:8081/api/v1/bookmarks/${id}?candidateId=${candidateId}`)
+      .then(() => setBookmarked(true))
+      .catch(err => {
+        if (err.response?.status === 404) {
+          setBookmarked(false);
+        } else {
+          console.error("Error checking bookmark status", err);
+        }
+      });
+  }, [id, candidateId]);
+
   // Apply to job
   const applyToJob = () => {
     setApplying(true);
@@ -62,6 +79,17 @@ const UserJobDetail = () => {
         setError("Failed to apply for the job.");
       })
       .finally(() => setApplying(false));
+  };
+
+  // Bookmark the job
+  const saveJob = () => {
+    setBookmarking(true);
+    axios.post(`http://localhost:8081/api/v1/bookmarks?candidateId=${candidateId}&jobId=${id}`)
+      .then(() => setBookmarked(true))
+      .catch(err => {
+        console.error("Bookmark error:", err);
+      })
+      .finally(() => setBookmarking(false));
   };
 
   if (loading) return <div className="text-center mt-5"><Spinner animation="border" variant="warning" /></div>;
@@ -98,7 +126,13 @@ const UserJobDetail = () => {
               >
                 {applied ? "Applied" : (applying ? "Applying..." : "Apply Now")}
               </Button>
-              <Button variant="outline-warning">Save Job</Button>
+              <Button
+                variant={bookmarked ? "success" : "outline-warning"}
+                onClick={saveJob}
+                disabled={bookmarked || bookmarking}
+              >
+                {bookmarked ? "Saved" : (bookmarking ? "Saving..." : "Save Job")}
+              </Button>
             </Col>
           </Row>
 

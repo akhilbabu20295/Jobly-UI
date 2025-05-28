@@ -24,6 +24,7 @@ import Usermanagement from './admin/Usermanagement';
 import CompanyList from './user/CompanyList';
 import UserJobList from './user/UserJobList';
 import UserJobDetail from './user/UserJobDetail';
+import SavedJobList from './user/SavedJobList';
 
 
 
@@ -50,6 +51,7 @@ function App() {
           <Route path="/list-jobs" element={<ListJobs />} />
           <Route path="/list-companies" element={<CompanyList />} />
           <Route path="/user-jobs" element={<UserJobList />} />
+          <Route path="/saved-jobs" element={<SavedJobList />} />
           <Route path="/recruiter-register" element={<EmployerRegister />} />
           {/* <Route path="/company-list" element={<CompanyList />} /> */}
           <Route path="/companyDashboard" element={<CompanyDashboard />} />
