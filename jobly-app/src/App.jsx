@@ -21,6 +21,8 @@ import EmployerRegister from './components/EmployerRegister';
 import Dashboard from './admin/Dashboard';
 import CompanyDashboard from './company/CompanyDashboard';
 import Usermanagement from './admin/Usermanagement';
+import CompanyList from './user/CompanyList';
+import UserJobList from './user/UserJobList';
 
 
 
@@ -45,6 +47,8 @@ function App() {
           <Route path="/reset-password" element={<ForgotPassword />} />
           <Route path="/post-jobs" element={<PostJobs />} />
           <Route path="/list-jobs" element={<ListJobs />} />
+          <Route path="/list-companies" element={<CompanyList />} />
+          <Route path="/user-jobs" element={<UserJobList />} />
           <Route path="/recruiter-register" element={<EmployerRegister />} />
           {/* <Route path="/company-list" element={<CompanyList />} /> */}
           <Route path="/companyDashboard" element={<CompanyDashboard />} />
