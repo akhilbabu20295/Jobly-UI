@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import './Dashboard.css';
 import CompanyDashboard from '../company/CompanyDashboard';
 import SkillsDashboard from '../skills/SkillsDashboard';
+import Usermanagement from './Usermanagement';
+
+
 
 const Dashboard = () => {
     const [activeSection, setActiveSection] = useState('dashboard');
@@ -91,13 +94,38 @@ const Dashboard = () => {
                             </li>
                         </ul>
                     </li>
-
                     <li className="nav-item">
-                        <a href="#" className="nav-link">
-                            <i className="bi bi-person-badge"></i>
-                            <span>User Management</span>
+                        <a
+                            href="#userManagementSubmenu"
+                            className="nav-link d-flex justify-content-between align-items-center"
+                            data-bs-toggle="collapse"
+                            role="button"
+                            aria-expanded="false"
+                            aria-controls="userManagementSubmenu"
+                        >
+                            <span>
+                                <i className="bi bi-person-badge"></i>
+                                <span className="ms-2">User Management</span>
+                            </span>
+                            <i className="bi bi-chevron-down"></i>
                         </a>
+
+                        <ul className="collapse list-unstyled ps-4" id="userManagementSubmenu">
+                            <li className="nav-item">
+                                <a href="#" className="nav-link" onClick={() => setActiveSection("recruiterDashboard")}>
+                                    Recruiter
+                                </a>
+                            </li>
+                            <li className="nav-item">
+                                <a href="#" className="nav-link" onClick={() => setActiveSection("userDashboard")}>
+                                    User
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+
+
+
                     <li className="nav-item">
                         <a href="#" className="nav-link">
                             <i className="bi bi-briefcase"></i>
@@ -141,6 +169,13 @@ const Dashboard = () => {
                             <SkillsDashboard />
                         </section>
                     )}
+
+                    {activeSection === 'userDashboard' && (
+                        <section className="user-dashboard">
+                            <Usermanagement />
+                        </section>
+                    )}
+
                 </div>
             </main>
 

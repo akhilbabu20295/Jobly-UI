@@ -20,6 +20,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import EmployerRegister from './components/EmployerRegister';
 import Dashboard from './admin/Dashboard';
 import CompanyDashboard from './company/CompanyDashboard';
+import Usermanagement from './admin/Usermanagement';
 
 
 
@@ -48,6 +49,7 @@ function App() {
           {/* <Route path="/company-list" element={<CompanyList />} /> */}
           <Route path="/companyDashboard" element={<CompanyDashboard />} />
           <Route path="/admin-dashboard" element={<Dashboard />} />
+          <Route path="/admin/user-mgt" element={<Usermanagement />} />
         </Routes>
     </div>  
   {/* <Footer/>  */}

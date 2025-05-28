@@ -8,24 +8,60 @@ const UserProfile = () => {
   const [showModal, setShowModal] = useState(false);
   const [showSkillModal, setShowSkillModal] = useState(false);
   const [profile, setProfile] = useState(null);
-  const [skills, setSkills] = useState(["Java", "Spring Boot", "MYSQL", "Hibernate"]); // Default skills
+  const [skills, setSkills] = useState([]);
+  const [availableSkills, setAvailableSkills] = useState([]);
+
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8081/api/v1/user/profile/4")
+    if (!userId) return;
+
+    // Fetch profile info
+    axios.get(`http://localhost:8081/api/v1/user/profile/${userId}`)
       .then((response) => {
         setProfile(response.data);
-        // You can extract skills from response if available
       })
       .catch((error) => {
         console.error("Error fetching profile data:", error);
       });
-  }, []);
+
+    // Fetch skills linked to user profile from separate endpoint
+    axios.get(`http://localhost:8081/api/v1/user/${userId}`)
+      .then((response) => {
+        // Assuming response.data is an array of skills [{id, name, ...}, ...]
+        const userSkills = response.data || [];
+        setSkills(userSkills.map(skill => skill.name));
+      })
+      .catch((error) => {
+        console.error("Error fetching user skills:", error);
+      });
+
+    // Fetch all available skills
+    axios.get("http://localhost:8081/api/v1/admin/skills")
+      .then((res) => setAvailableSkills(res.data))
+      .catch((err) => console.error("Error fetching skills:", err));
+  }, [userId]);
 
   const handleSaveSkills = (updatedSkills) => {
+    if (!profile?.id) return;
+
+    // For simplicity, assume adding only new skills (not deleting)
+    const newSkills = updatedSkills.filter(skillName => !skills.includes(skillName));
+
+    newSkills.forEach(skillName => {
+      const skill = availableSkills.find(s => s.name === skillName);
+      if (skill) {
+        axios.post("http://localhost:8081/api/v1/user/profile/skills/add", {
+          userProfileId: profile.id,
+          skillId: skill.id
+        }).catch(error => {
+          console.error(`Error adding skill ${skillName}:`, error);
+        });
+      }
+    });
+
+    // Update local skills state immediately
     setSkills(updatedSkills);
-    // Optionally, send to backendcd
-    // axios.put("/api/skills", updatedSkills);
   };
 
   return (
@@ -36,6 +72,7 @@ const UserProfile = () => {
         handleClose={() => setShowSkillModal(false)}
         skills={skills}
         onSave={handleSaveSkills}
+        availableSkills={availableSkills}
       />
 
       <div className="bg-white rounded shadow-sm" style={{ marginTop: "150px" }}>
