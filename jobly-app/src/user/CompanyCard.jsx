@@ -17,7 +17,7 @@ const CompanyCard = ({ company }) => {
           <span className="badge bg-warning bg-opacity-25 text-warning mb-3">
             {company.openPositions} open positions
           </span>
-          <button className="btn btn-warning btn-sm text-white">View Jobs</button>
+          <button className="btn btn-warning btn-sm text-white">View Recruiter</button>
         </div>
       </div>
     </div>
