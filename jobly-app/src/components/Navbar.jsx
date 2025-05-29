@@ -28,7 +28,7 @@ const Navbar = () => {
             {/* --- DEFAULT NAV (for non-logged-in users) --- */}
             {!role && (
               <>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <Link to="/" className="nav-link active">Home</Link>
                 </li>
                 <li className="nav-item">
@@ -39,7 +39,7 @@ const Navbar = () => {
                 </li>
                 <li className="nav-item">
                   <Link to="/contact" className="nav-link">Contact</Link>
-                </li>
+                </li> */}
               </>
             )}
 
@@ -95,7 +95,6 @@ const Navbar = () => {
                     Employer
                   </button>
                   <ul className="dropdown-menu" aria-labelledby="employerDropdown">
-                    <li><Link to="/employer/login" className="dropdown-item">Employer Login</Link></li>
                     <li><Link to="/recruiter-register" className="dropdown-item">Employer Register</Link></li>
                   </ul>
                 </div>

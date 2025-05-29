@@ -3,11 +3,24 @@ import './Dashboard.css';
 import CompanyDashboard from '../company/CompanyDashboard';
 import SkillsDashboard from '../skills/SkillsDashboard';
 import Usermanagement from './Usermanagement';
-
-
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    Tooltip,
+    CartesianGrid,
+    ResponsiveContainer
+} from 'recharts';
 
 const Dashboard = () => {
     const [activeSection, setActiveSection] = useState('dashboard');
+
+    // Static chart data (replace with dynamic fetch if needed)
+    const userStatsData = [
+        { role: 'Recruiters', count: 10 },
+        { role: 'Users', count: 25 },
+    ];
 
     return (
         <div>
@@ -124,8 +137,6 @@ const Dashboard = () => {
                         </ul>
                     </li>
 
-
-
                     <li className="nav-item">
                         <a href="#" className="nav-link">
                             <i className="bi bi-briefcase"></i>
@@ -152,8 +163,28 @@ const Dashboard = () => {
                                     <h5>Dashboard</h5>
                                 </div>
                             </div>
+
                             <section className="dash-overview mb-4">
-                                {/* Dashboard widgets/cards go here */}
+                                {/* Add your dashboard widgets/cards here if needed */}
+                            </section>
+
+                            {/* Chart Section */}
+                            <section className="mb-5">
+                                <h5>User Role Statistics</h5>
+                                <div style={{ width: '100%', height: 300 }}>
+                                    <ResponsiveContainer>
+                                        <BarChart
+                                            data={userStatsData}
+                                            margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="role" />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Bar dataKey="count" fill="#007bff" />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </div>
                             </section>
                         </>
                     )}
@@ -175,7 +206,6 @@ const Dashboard = () => {
                             <Usermanagement />
                         </section>
                     )}
-
                 </div>
             </main>
 
