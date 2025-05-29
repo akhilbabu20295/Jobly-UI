@@ -82,8 +82,7 @@ const UserProfile = () => {
 
     const formData = new FormData();
     formData.append("resume", file);
-
-    axios.post(`http://localhost:8081/api/v1/user/profile/${profile.id}/resume`, formData, {
+    axios.patch(`http://localhost:8081//api/v1/user/profile/resume/upload/${profile.id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`

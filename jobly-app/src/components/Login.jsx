@@ -25,7 +25,7 @@ function Login() {
       });
 
       const data = await response.json();
-      console.log("userId"+data.userId);
+      console.log("userId" + data.userId);
 
       if (response.ok) {
         setError("");
@@ -35,10 +35,16 @@ function Login() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("userId", data.userId);
         localStorage.setItem("role", data.role);
-        
-        
-        window.location.href = "/profile";
-        
+
+
+        if (data.role === "RECRUITER") {
+          window.location.href = "/recruiter-profile";
+        } else if (data.role === "USER") {
+          window.location.href = "/profile";
+        } else {
+          window.location.href = "/admin-dashboard"; // fallback
+        }
+
       } else {
         setError(data.message || "Login failed.");
       }
