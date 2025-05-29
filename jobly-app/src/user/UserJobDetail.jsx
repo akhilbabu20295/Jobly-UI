@@ -21,7 +21,7 @@ const UserJobDetail = () => {
 
   // Load job details
   useEffect(() => {
-    axios.get(`http://localhost:8081/api/v1/recruiters/jobs/${id}`)
+    axios.get(`http://localhost:8081/api/v1/recruiters/job/${id}`)
       .then(response => {
         setJob(response.data);
         setLoading(false);
@@ -32,17 +32,26 @@ const UserJobDetail = () => {
       });
   }, [id]);
 
-  // Check if already applied
+  // Check if already applied using new endpoint
   useEffect(() => {
-    axios.get(`http://localhost:8081/api/v1/applications/${id}?candidateId=${candidateId}`)
-      .then(() => setApplied(true))
-      .catch(err => {
+    const checkApplicationStatus = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8081/api/v1/applications/job/${id}?candidateId=${candidateId}&jobId=${id}`
+        );
+        if (response.status === 200) {
+          setApplied(true);
+        }
+      } catch (err) {
         if (err.response?.status === 404) {
-          setApplied(false); // Not applied yet
+          setApplied(false);
         } else {
           console.error("Error checking application status", err);
         }
-      });
+      }
+    };
+
+    checkApplicationStatus();
   }, [id, candidateId]);
 
   // Check if bookmarked
@@ -60,6 +69,8 @@ const UserJobDetail = () => {
 
   // Apply to job
   const applyToJob = () => {
+    if (applied || applying) return;
+
     setApplying(true);
     setError(null);
     setSuccess(null);
@@ -71,18 +82,22 @@ const UserJobDetail = () => {
 
     axios.post(`http://localhost:8081/api/v1/applications?${params.toString()}`)
       .then(() => {
-        setApplied(true);
         setSuccess("Application submitted successfully!");
+        setApplied(true);
       })
       .catch(err => {
         console.error("Application error:", err);
         setError("Failed to apply for the job.");
       })
-      .finally(() => setApplying(false));
+      .finally(() => {
+        setApplying(false);
+      });
   };
 
   // Bookmark the job
   const saveJob = () => {
+    if (bookmarked || bookmarking) return;
+
     setBookmarking(true);
     axios.post(`http://localhost:8081/api/v1/bookmarks?candidateId=${candidateId}&jobId=${id}`)
       .then(() => setBookmarked(true))

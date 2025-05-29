@@ -62,7 +62,7 @@ const Navbar = () => {
             )}
 
             {/* --- EMPLOYER NAV --- */}
-            {role === "EMPLOYER" && (
+            {role === "RECRUITER" && (
               <>
                 <li className="nav-item">
                   <Link to="/employer/dashboard" className="nav-link">Dashboard</Link>

@@ -11,10 +11,9 @@ const UserProfile = () => {
   const [skills, setSkills] = useState([]);
   const [availableSkills, setAvailableSkills] = useState([]);
   const [resumeUrl, setResumeUrl] = useState(null);
-  const [resumeFile, setResumeFile] = useState(null);
 
   const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token"); // Ensure token is saved after login
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (!userId) return;
@@ -36,9 +35,13 @@ const UserProfile = () => {
     axios.get("http://localhost:8081/api/v1/admin/skills")
       .then((res) => setAvailableSkills(res.data))
       .catch((err) => console.error("Error fetching skills:", err));
+  }, [userId]);
+
+  useEffect(() => {
+    if (!profile?.id || !token) return;
 
     // Fetch resume URL
-    axios.get(`http://localhost:8081/api/v1/user/profile/${userId}/resume`, {
+    axios.get(`http://localhost:8081/api/v1/user/profile/resume/${profile.id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -54,8 +57,7 @@ const UserProfile = () => {
         }
         setResumeUrl(null);
       });
-
-  }, [userId, token]);
+  }, [profile?.id, token]);
 
   const handleSaveSkills = (updatedSkills) => {
     if (!profile?.id) return;
@@ -79,10 +81,10 @@ const UserProfile = () => {
   const handleResumeUpload = (e) => {
     const file = e.target.files[0];
     if (!file || !profile?.id) return;
-
+  console.log("file"+file);
     const formData = new FormData();
     formData.append("resume", file);
-    axios.patch(`http://localhost:8081//api/v1/user/profile/resume/upload/${profile.id}`, formData, {
+    axios.post(`http://localhost:8081/api/v1/user/profile/resume/upload/${profile.id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`

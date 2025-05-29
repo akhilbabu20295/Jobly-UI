@@ -12,11 +12,13 @@ const PostJobs = () => {
 
   const [jobs, setJobs] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editJobId, setEditJobId] = useState(null);
   const recruiterId = 1; // Hardcoded for now
 
   const fetchJobs = async () => {
     try {
-      const response = await axios.get("http://localhost:8081/api/v1/jobs");
+      const response = await axios.get(`http://localhost:8081/api/v1/recruiters/jobs/${recruiterId}`);
       setJobs(response.data);
     } catch (error) {
       console.error("Failed to fetch jobs:", error);
@@ -37,11 +39,19 @@ const PostJobs = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const endpoint = `http://localhost:8081/api/v1/recruiters/jobs/${recruiterId}`;
+    const endpoint = isEditMode
+      ? `http://localhost:8081/api/v1/recruiters/jobs/${editJobId}`
+      : `http://localhost:8081/api/v1/recruiters/jobs/${recruiterId}`;
 
     try {
-      const response = await axios.post(endpoint, formData);
-      alert("Job posted successfully!");
+      if (isEditMode) {
+        await axios.put(endpoint, formData);
+        alert("Job updated successfully!");
+      } else {
+        await axios.post(endpoint, formData);
+        alert("Job posted successfully!");
+      }
+
       setFormData({
         title: "",
         location: "",
@@ -50,10 +60,12 @@ const PostJobs = () => {
         description: ""
       });
       setShowModal(false);
+      setIsEditMode(false);
+      setEditJobId(null);
       fetchJobs();
     } catch (error) {
-      console.error("Error posting job:", error);
-      alert("Failed to post job.");
+      console.error("Error saving job:", error);
+      alert("Failed to save job.");
     }
   };
 
@@ -68,17 +80,45 @@ const PostJobs = () => {
     }
   };
 
+  const handleEdit = (job) => {
+    setFormData({
+      title: job.title,
+      location: job.location,
+      salary: job.salary,
+      experienceLevel: job.experienceLevel,
+      description: job.description
+    });
+    setEditJobId(job.id);
+    setIsEditMode(true);
+    setShowModal(true);
+  };
+
+  const handleToggleStatus = (jobId) => {
+    alert(`Toggled status for Job ID ${jobId}`);
+  };
+
   return (
     <div className="container mt-5">
-      {/* Button to open modal */}
       <div className="d-flex justify-content-between mb-3">
         <h3>Job Listings</h3>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            setShowModal(true);
+            setIsEditMode(false);
+            setFormData({
+              title: "",
+              location: "",
+              salary: "",
+              experienceLevel: "",
+              description: ""
+            });
+          }}
+        >
           Post Job
         </button>
       </div>
 
-      {/* Job Listing Table */}
       <div className="card shadow p-4">
         <table className="table table-bordered table-striped">
           <thead className="table-dark">
@@ -102,11 +142,11 @@ const PostJobs = () => {
                 <td>{job.experienceLevel}</td>
                 <td>{job.postedDate}</td>
                 <td>
-                  <button className="btn btn-sm btn-warning me-2">Edit</button>
-                  <button
-                    className="btn btn-sm btn-danger"
-                    onClick={() => handleDelete(job.id)}
-                  >
+                  <button className="btn btn-sm btn-warning me-2" onClick={() => handleEdit(job)}>Edit</button>
+                  <button className="btn btn-sm btn-secondary me-2" onClick={() => handleToggleStatus(job.id)}>
+                    Enable/Disable
+                  </button>
+                  <button className="btn btn-sm btn-danger" onClick={() => handleDelete(job.id)}>
                     Delete
                   </button>
                 </td>
@@ -121,14 +161,13 @@ const PostJobs = () => {
         </table>
       </div>
 
-      {/* Bootstrap Modal */}
       {showModal && (
         <div className="modal show d-block" tabIndex="-1">
           <div className="modal-dialog modal-lg">
             <div className="modal-content">
               <form onSubmit={handleSubmit}>
                 <div className="modal-header">
-                  <h5 className="modal-title">Post a New Job</h5>
+                  <h5 className="modal-title">{isEditMode ? "Edit Job" : "Post a New Job"}</h5>
                   <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
                 </div>
                 <div className="modal-body">
@@ -166,7 +205,7 @@ const PostJobs = () => {
                     Cancel
                   </button>
                   <button type="submit" className="btn btn-primary">
-                    Post Job
+                    {isEditMode ? "Update Job" : "Post Job"}
                   </button>
                 </div>
               </form>
