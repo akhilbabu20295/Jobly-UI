@@ -54,13 +54,13 @@ export default function SkillsDashboard() {
             })
             .then((data) => {
                 setSkills((prev) =>
-                    prev.map((skills) => (skills.id === data.id ? data : skills))
+                    prev.map((skill) => (skill.id === data.id ? data : skill))
                 );
                 setShowEditModal(false);
             })
             .catch((err) => {
                 console.error("Error updating skills:", err);
-                alert("Failed to update skills");
+                alert("Failed to update skill");
             });
     };
 
@@ -69,45 +69,56 @@ export default function SkillsDashboard() {
         setForm((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setSuccessMessage("");
-        setErrorMessage("");
-        setSaving(true);
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSuccessMessage("");
+    setErrorMessage("");
+    setSaving(true);
 
-        try {
-            const response = await fetch("http://localhost:8081/api/v1/admin/skills", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(form),
-            });
+    try {
+        const response = await fetch("http://localhost:8081/api/v1/admin/skills", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(form),
+        });
 
-            if (!response.ok) throw new Error("Failed to create skill");
+        const contentType = response.headers.get("content-type");
 
-            const newSkill = await response.json();
+        if (!response.ok) {
+            const errorText = contentType?.includes("application/json")
+                ? await response.json()
+                : await response.text();
+            throw new Error(errorText.message || errorText || "Failed to create skill");
+        }
+
+        const newSkill = contentType?.includes("application/json")
+            ? await response.json()
+            : null;
+
+        if (newSkill) {
             setSkills((prev) => [...prev, newSkill]);
             setSuccessMessage("Skill created successfully!");
-            setForm({
-                name: "",
-                description: "",
-            });
-        } catch (error) {
-            console.error("Error:", error);
-            setErrorMessage("Failed to create skill.");
-        } finally {
-            setSaving(false);
+            setForm({ name: "", description: "" });
+        } else {
+            setSuccessMessage("Skill created successfully, but no data returned.");
         }
-    };
+    } catch (error) {
+        console.error("Error:", error);
+        setErrorMessage(error.message || "Failed to create skill.");
+    } finally {
+        setSaving(false);
+    }
+};
 
     return (
         <div className="container py-4">
             <h2>Skills Management</h2>
-            <p className="text-muted">Dashboard / skills</p>
+            <p className="text-muted">Dashboard / Skills</p>
 
             <div className="row">
-                {/* skills List */}
+                {/* Skills List */}
                 <div className="col-lg-7 mb-4">
                     <div className="card p-3 shadow-sm">
                         {loading ? (
@@ -127,16 +138,20 @@ export default function SkillsDashboard() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {skills.map((c, i) => (
+                                    {skills.map((skill, i) => (
                                         <tr key={i}>
-                                            <td>{c.name}</td>
-                                            <td>{c.description}</td>
-                                            <td>{c.createdAt ? new Date(c.createdAt).toLocaleDateString() : "N/A"}</td>
+                                            <td>{skill.name}</td>
+                                            <td>{skill.description}</td>
+                                            <td>
+                                                {skill.createdAt
+                                                    ? new Date(skill.createdAt).toLocaleDateString()
+                                                    : "N/A"}
+                                            </td>
                                             <td>
                                                 <Button
                                                     variant="outline-primary"
                                                     size="sm"
-                                                    onClick={() => handleEditClick(c)}
+                                                    onClick={() => handleEditClick(skill)}
                                                 >
                                                     Edit
                                                 </Button>{" "}
@@ -152,17 +167,17 @@ export default function SkillsDashboard() {
                     </div>
                 </div>
 
-                {/* Add Company Form */}
+                {/* Add Skill Form */}
                 <div className="col-lg-5">
                     <div className="card p-4 shadow-sm">
-                        <h5>Add New skills</h5>
+                        <h5>Add New Skill</h5>
 
                         {successMessage && <Alert variant="success">{successMessage}</Alert>}
                         {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
 
                         <Form onSubmit={handleSubmit}>
                             <Form.Group className="mb-3">
-                                <Form.Label>skill Name</Form.Label>
+                                <Form.Label>Skill Name</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="name"
