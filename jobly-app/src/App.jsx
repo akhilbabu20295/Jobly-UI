@@ -26,6 +26,7 @@ import UserJobList from './user/UserJobList';
 import UserJobDetail from './user/UserJobDetail';
 import SavedJobList from './user/SavedJobList';
 import RecruiterProfile from './recruiter/RecruiterProfile';
+import RecruiterManagement from './admin/Recruitermanagement';
 
 
 
@@ -59,6 +60,7 @@ function App() {
           <Route path="/admin-dashboard" element={<Dashboard />} />
           <Route path="/recruiter-profile" element={<RecruiterProfile />} />
           <Route path="/admin/user-mgt" element={<Usermanagement />} />
+          <Route path="/admin/recruiter-mgt" element={<RecruiterManagement />} />
         </Routes>
     </div>  
   {/* <Footer/>  */}
