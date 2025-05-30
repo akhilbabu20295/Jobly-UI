@@ -65,13 +65,10 @@ const Navbar = () => {
             {role === "RECRUITER" && (
               <>
                 <li className="nav-item">
-                  <Link to="/employer/dashboard" className="nav-link">Dashboard</Link>
+                  <Link to="/recruiter-profile" className="nav-link">Dashboard</Link>
                 </li>
                 <li className="nav-item">
                   <Link to="/employer/post-job" className="nav-link">Post a Job</Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="/employer/jobs" className="nav-link">Manage Jobs</Link>
                 </li>
               </>
             )}

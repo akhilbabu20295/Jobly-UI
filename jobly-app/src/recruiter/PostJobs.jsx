@@ -14,6 +14,10 @@ const PostJobs = () => {
   const [showModal, setShowModal] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editJobId, setEditJobId] = useState(null);
+  const [applicants, setApplicants] = useState([]);
+  const [showApplicantsModal, setShowApplicantsModal] = useState(false);
+  const [shortlistedCandidates, setShortlistedCandidates] = useState([]);
+
   const recruiterId = 1; // Hardcoded for now
 
   const fetchJobs = async () => {
@@ -93,8 +97,32 @@ const PostJobs = () => {
     setShowModal(true);
   };
 
-  const handleToggleStatus = (jobId) => {
-    alert(`Toggled status for Job ID ${jobId}`);
+  const handleViewApplicants = async (jobId) => {
+    try {
+      const response = await axios.get(`http://localhost:8081/api/v1/applications/${jobId}`);
+      setApplicants(Array.isArray(response.data) ? response.data : [response.data]);
+      setShortlistedCandidates([]); // Reset shortlist state on modal open
+      setShowApplicantsModal(true);
+    } catch (error) {
+      console.error("Failed to fetch applicants:", error);
+      alert("Could not load applicants.");
+    }
+  };
+
+  const handleShortlist = async (candidateId, jobId) => {
+    if (shortlistedCandidates.includes(candidateId)) {
+      alert("Candidate already shortlisted!");
+      return;
+    }
+
+    try {
+      await axios.post(`http://localhost:8081/api/v1/shortlists?candidateId=${candidateId}&jobId=${jobId}`);
+      alert("Candidate shortlisted successfully!");
+      setShortlistedCandidates(prev => [...prev, candidateId]);
+    } catch (error) {
+      console.error("Shortlisting failed:", error);
+      alert("Failed to shortlist candidate.");
+    }
   };
 
   return (
@@ -143,8 +171,8 @@ const PostJobs = () => {
                 <td>{job.postedDate}</td>
                 <td>
                   <button className="btn btn-sm btn-warning me-2" onClick={() => handleEdit(job)}>Edit</button>
-                  <button className="btn btn-sm btn-secondary me-2" onClick={() => handleToggleStatus(job.id)}>
-                    Enable/Disable
+                  <button className="btn btn-sm btn-info me-2" onClick={() => handleViewApplicants(job.id)}>
+                    View Applicants
                   </button>
                   <button className="btn btn-sm btn-danger" onClick={() => handleDelete(job.id)}>
                     Delete
@@ -161,6 +189,7 @@ const PostJobs = () => {
         </table>
       </div>
 
+      {/* Job Form Modal */}
       {showModal && (
         <div className="modal show d-block" tabIndex="-1">
           <div className="modal-dialog modal-lg">
@@ -182,7 +211,7 @@ const PostJobs = () => {
                     </div>
                     <div className="col-md-4">
                       <label className="form-label">Salary</label>
-                      <input type="number" className="form-control" name="salary" value={formData.salary} onChange={handleChange} step="0.01" />
+                      <input type="number" className="form-control" name="salary" value={formData.salary} onChange={handleChange} />
                     </div>
                     <div className="col-md-4">
                       <label className="form-label">Experience Level</label>
@@ -209,6 +238,73 @@ const PostJobs = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Applicants Modal */}
+      {showApplicantsModal && (
+        <div className="modal show d-block" tabIndex="-1">
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Applicants List</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowApplicantsModal(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                {applicants.length === 0 ? (
+                  <p>No applicants yet.</p>
+                ) : (
+                  <table className="table table-bordered">
+                    <thead className="table-light">
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Location</th>
+                        <th>DOB</th>
+                        <th>Designation</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {applicants.map((app) => (
+                        <tr key={app.candidate.id}>
+                          <td>{app.candidate.firstName} {app.candidate.lastName}</td>
+                          <td>{app.candidate.email}</td>
+                          <td>{app.candidate.mobile}</td>
+                          <td>{app.candidate.location}</td>
+                          <td>{app.candidate.dateOfBirth}</td>
+                          <td>{app.candidate.designation}</td>
+                          <td>
+                            <button
+                              className="btn btn-sm btn-success"
+                              onClick={() => handleShortlist(app.candidate.id, app.job.id)}
+                              disabled={shortlistedCandidates.includes(app.candidate.id)}
+                            >
+                              {shortlistedCandidates.includes(app.candidate.id) ? "Shortlisted" : "Shortlist"}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowApplicantsModal(false)}
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>
